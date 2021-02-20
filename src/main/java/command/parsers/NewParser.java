@@ -7,7 +7,6 @@ import java.util.Map;
 public class NewParser {
 
     public static String parseClass(String commandline) {
-
         // parse command for class and fix case register (classname -> Classname)
         String lowercaseString = commandline.trim().toLowerCase();
         StringBuilder tempClassStr = new StringBuilder(lowercaseString.substring(0,lowercaseString.lastIndexOf(' ')));
@@ -17,7 +16,6 @@ public class NewParser {
     }
 
     public static Map<String, String> parseParameters(String commandline) {
-
         String parametersLine = commandline.substring(commandline.indexOf(' ')).trim();
 
         Map<String, String> parameters = new HashMap<>();

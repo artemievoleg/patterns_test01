@@ -1,15 +1,14 @@
 package command.commands;
 
 import command.parsers.ListParser;
-import containers.BookSet;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class ListCommand extends Command {
 
-    private static final String packagePath = "entities";
     private static final String containerPackagePath = "containers";
 
-    private Class objectClass;
-    private Object object;
     private Class objectSetClass;
 
     public ListCommand(String commandLine) {
@@ -21,27 +20,32 @@ public class ListCommand extends Command {
 
         String classString = ListParser.parseClass(commandLine);
 
-        Object object;
         try {
-            this.objectClass = Class.forName(packagePath + "." + classString);
-            object = objectClass.newInstance();
-            this.object = object;
 
             Class objectSetClass = Class.forName(containerPackagePath + "." + classString + "Set");
             this.objectSetClass = objectSetClass;
 
         } catch (ClassNotFoundException e) {
-            System.out.println("Could not find class " + classString + " in package " + packagePath);
-        } catch (InstantiationException | IllegalAccessException e) {
-            System.out.println("Could not create object.");
+            System.out.println("Could not find classSet");
         }
 
+        try {
 
+            Method getSetMethod = objectSetClass.getDeclaredMethod("getSet");
+            try {
 
-        BookSet.getSet().forEach(book -> System.out.println(book));
+                String outString = getSetMethod.invoke(null).toString();
+                System.out.println(outString);
 
+            } catch (IllegalAccessException e) {
+                System.out.println("Could not access method getSet");
+            } catch (InvocationTargetException e) {
+                System.out.println("Could not invoke method getSet");
+            }
 
-
+        } catch (NoSuchMethodException e) {
+            System.out.println("Could not find method getSet");
+        }
     }
 
     @Override
